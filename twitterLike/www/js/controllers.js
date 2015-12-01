@@ -37,6 +37,12 @@ angular.module('starter.controllers', [])
   }).then(function(modal) {
     $scope.succRegisterModal = modal;
   });
+  $ionicModal.fromTemplateUrl('templates/succLogin.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.succLoginModal = modal;
+  });
+
 
 
   //Google map init
@@ -96,6 +102,11 @@ angular.module('starter.controllers', [])
     $scope.succRegisterModal.hide();
     $scope.modal.show();
   };
+  $scope.closeSuccLogin = function() {
+    $scope.succLoginModal.hide();
+    $scope.modal.hide();
+  };
+
 
 
   $scope.doRegister = function(){
@@ -139,12 +150,23 @@ angular.module('starter.controllers', [])
   // Perform the login action when the user submits the login form
   $scope.doLogin = function() {
     console.log('Doing login', $scope.loginData);
+    $http.get('http://127.0.0.1:3000/user/').success(function(response){
 
-    // Simulate a login delay. Remove this and replace with your login
-    // code if using a login system
-    $timeout(function() {
+      $scope.userData = response;
+      console.log('userData is:',$scope.userData);
+      response.forEach(function(res){
+        if(res.username === $scope.loginData.username){
+          if(res.password === $scope.loginData.password){
+            $scope.succLoginModal.show();
+          }
+        }
+      });
+      
+    });
+    
+    /*$timeout(function() {
       $scope.closeLogin();
-    }, 1000);
+    }, 1000);*/
   };
 })
 

@@ -21,6 +21,18 @@ app.get('/user', function(req,res){
 
 	
 });
+
+app.get('/user/:username', function(req,res){
+	var usname = req.params.username;
+	console.log('I received a get request for username:',usname);
+
+	db.user.findOne({username: usname}, function(err,doc){
+		res.json(doc);
+	});
+
+	
+});
+
 app.post('/user', function(req, res){
 	console.log(req.body);
 	db.user.insert(req.body, function(err, doc){
