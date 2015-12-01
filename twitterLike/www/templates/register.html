@@ -1,0 +1,40 @@
+<ion-modal-view>
+  <ion-header-bar>
+    <h1 class="title">Register</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closeRegisterLogin()">Close</button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+    <form>
+      <div class="list">
+        <label class="item item-input">
+          <span class="input-label">Username</span>
+          <input class="customText" type="text" ng-model="registerData.username" required/>
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Password(Min 8 Characters)</span>
+          <input class="customText" pattern=".{0}|.{8,}" type="password" ng-model="registerData.password" required/>
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Confirm Password(Min 8 Characters)</span>
+          <input class="customText" pattern=".{0}|.{8,}" type="password" ng-model="registerData.cpassword" required/>
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Email Id</span>
+          <input class="customText" type="email" ng-model="registerData.email" required/>
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Date Of Birth</span>
+          <input class="customText" type="date" ng-model="registerData.dob" required/>
+        </label>
+        <label class="item item-input" >
+          <span class="input-label" ng-repeat="error in errorLabel">{{error}}</span>
+        </label>
+        <label class="item">
+          <button class="button button-block button-energized" ng-click="doRegister()">Register</button>
+        </label>
+      </div>
+    </form>
+  </ion-content>
+</ion-modal-view>

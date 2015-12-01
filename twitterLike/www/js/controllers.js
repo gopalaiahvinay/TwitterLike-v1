@@ -11,6 +11,8 @@ angular.module('starter.controllers', [])
 
   // Form data for the login modal
   $scope.loginData = {};
+  $scope.registerData = {};
+  $scope.errorLabel = [];
 
   // Create the login modal that we will use later
   $ionicModal.fromTemplateUrl('templates/login.html', {
@@ -18,16 +20,41 @@ angular.module('starter.controllers', [])
   }).then(function(modal) {
     $scope.modal = modal;
   });
+  // Create the register modal that we will use later
+  $ionicModal.fromTemplateUrl('templates/register.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.registerModal = modal;
+  });
+
 
   // Triggered in the login modal to close it
   $scope.closeLogin = function() {
     $scope.modal.hide();
   };
+  $scope.closeRegisterLogin = function() {
+    $scope.registerModal.hide();
+  };
 
+  $scope.doRegister = function(){
+    console.log('form submitted for validation');
+    if($scope.registerData.password !== $scope.registerData.cpassword){
+      $scope.errorLabel.push('Passwords do not match.\n') ;
+    }
+    if($scope.registerData.password.length < 8){
+      $scope.errorLabel.push('Password is too short.\n');
+    }
+  }
   // Open the login modal
   $scope.login = function() {
     $scope.modal.show();
   };
+  // Open the login modal
+  $scope.register = function() {
+    console.log('register modal clicked');
+    $scope.registerModal.show();
+  };
+
 
   // Perform the login action when the user submits the login form
   $scope.doLogin = function() {
@@ -41,16 +68,3 @@ angular.module('starter.controllers', [])
   };
 })
 
-.controller('PlaylistsCtrl', function($scope) {
-  $scope.playlists = [
-    { title: 'Reggae', id: 1 },
-    { title: 'Chill', id: 2 },
-    { title: 'Dubstep', id: 3 },
-    { title: 'Indie', id: 4 },
-    { title: 'Rap', id: 5 },
-    { title: 'Cowbell', id: 6 }
-  ];
-})
-
-.controller('PlaylistCtrl', function($scope, $stateParams) {
-});

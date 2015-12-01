@@ -22,3 +22,10 @@
     border-style: none !important;
     font-size: 16px !important;
 }
+
+.customText{
+    border-style: dashed !important;
+    border-width: thin !important;
+    width: 95% !important;
+    
+}
