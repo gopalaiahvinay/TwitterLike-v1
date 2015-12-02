@@ -19,31 +19,51 @@ angular.module('starter.controllers', [])
   $scope.registerData = {};
   $scope.errorLabel = [];
   $scope.mapDetails = {};
+  $scope.tweetData = {
+    tweet: '',
+    username: '',
+    timestamp: '',
+    hashtags : [],
+    like:[],
+    retweet:[],
+    location:{}
+  };
   // Create the login modal that we will use later
-  $ionicModal.fromTemplateUrl('templates/login.html', {
+  $ionicModal.fromTemplateUrl('templates/modals/login.html', {
     scope: $scope
   }).then(function(modal) {
     $scope.modal = modal;
   });
   // Create the register modal that we will use later
-  $ionicModal.fromTemplateUrl('templates/register.html', {
+  $ionicModal.fromTemplateUrl('templates/modals/register.html', {
     scope: $scope
   }).then(function(modal) {
     $scope.registerModal = modal;
   });
   // Create the register done modal that we will use later
-  $ionicModal.fromTemplateUrl('templates/succRegister.html', {
+  $ionicModal.fromTemplateUrl('templates/modals/succRegister.html', {
     scope: $scope
   }).then(function(modal) {
     $scope.succRegisterModal = modal;
   });
-  $ionicModal.fromTemplateUrl('templates/succLogin.html', {
+  $ionicModal.fromTemplateUrl('templates/modals/succLogin.html', {
     scope: $scope
   }).then(function(modal) {
     $scope.succLoginModal = modal;
   });
+  $ionicModal.fromTemplateUrl('templates/modals/composeTweet.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.composeTweetModal = modal;
+  });
 
 
+  $scope.composeTweetShow = function(){
+    $scope.composeTweetModal.show();
+  }
+  $scope.closeCompose = function(){
+    $scope.composeTweetModal.hide();
+  }
 
   //Google map init
   function initMap() {
@@ -110,7 +130,7 @@ angular.module('starter.controllers', [])
 
 
   $scope.doRegister = function(){
-    
+    var thumbnail;
     console.log('form submitted for validation');
     if($scope.registerData.password !== $scope.registerData.cpassword){
       $scope.errorLabel.push('Passwords do not match.\n') ;
@@ -119,20 +139,28 @@ angular.module('starter.controllers', [])
       $scope.errorLabel.push('Password is too short.\n');
     }
     if($scope.errorLabel.length === 0){
-      console.log('Successfuly Validated');
-      mapOptions = $scope.mapDetails ;
-      console.log('doRegister func() Map details:',$scope.mapDetails);
       var UserObject = {
         username: $scope.registerData.username,
         password: $scope.registerData.password,
         email: $scope.registerData.email,
         dob: $scope.registerData.dob,
-        location: $scope.mapDetails
+        location: $scope.mapDetails,
+        avatar: thumbnail
       };
-      $http.post('http://127.0.0.1:3000/user',UserObject).success(function(response){
-        console.log(response);
-        $scope.succRegisterModal.show();
+      console.log('Successfuly Validated');
+      mapOptions = $scope.mapDetails ;
+      console.log('doRegister func() Map details:',$scope.mapDetails);
+      $http.get('https://randomuser.me/api/').success(function(response){
+        console.log('random user response',response);
+        console.log('The thumbnail url is:', response.results[0].user.picture.thumbnail);
+        UserObject.avatar = response.results[0].user.picture.thumbnail;
+        $http.post('http://192.168.1.12:3000/user',UserObject).success(function(response){
+          console.log(response);
+          $scope.succRegisterModal.show();
+        });
       });
+      
+      
     }
   }
   // Open the login modal
@@ -150,14 +178,18 @@ angular.module('starter.controllers', [])
   // Perform the login action when the user submits the login form
   $scope.doLogin = function() {
     console.log('Doing login', $scope.loginData);
-    $http.get('http://127.0.0.1:3000/user/').success(function(response){
+    $http.get('http://192.168.1.12:3000/user/').success(function(response){
 
       $scope.userData = response;
       console.log('userData is:',$scope.userData);
       response.forEach(function(res){
         if(res.username === $scope.loginData.username){
           if(res.password === $scope.loginData.password){
-            $scope.succLoginModal.show();
+            
+            $scope.avatar = res.avatar;
+            $scope.loggedIn = true;
+            $scope.loggedInData = res;
+            $scope.modal.hide();
           }
         }
       });
@@ -167,6 +199,40 @@ angular.module('starter.controllers', [])
     /*$timeout(function() {
       $scope.closeLogin();
     }, 1000);*/
+  };
+
+  $scope.composeTweet = function(){
+
+
+    if($scope.tweetData.tweet !== '' || $scope.tweetData.tweet !== undefined){
+      $scope.tweetData.username = $scope.loggedInData.username;
+      $scope.tweetData.timestamp = new Date();
+      $scope.tweetData.hashtags = [];
+      $scope.tweetData.like = [];
+      $scope.tweetData.retweet = [];
+      $scope.tweetData.location = $scope.mapDetails;
+      $http.post('http://192.168.1.12:3000/tweet',$scope.tweetData).success(function(response){
+        console.log(response);
+        $scope.tweetData.tweet = '';
+        $scope.composeTweetModal.hide();
+      });
+    }
+    else{
+
+    }
+    
+
+
+  };
+
+  $scope.displayTweets = function(){
+
+    $http.get('http://192.168.1.12:3000/tweet/').success(function(response){
+
+      $scope.tweets = response;
+
+    });
+
   };
 })
 

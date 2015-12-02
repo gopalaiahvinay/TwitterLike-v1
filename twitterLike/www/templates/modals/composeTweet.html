@@ -1,0 +1,19 @@
+<ion-modal-view>
+  <ion-header-bar>
+    <h1 class="title">What's On Your Mind?</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closeCompose()">Close</button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+    <form>
+      <div class="list">
+        <textarea id="comment-textarea" ng-model="tweetData.tweet"></textarea>
+      </div>
+      <label class="item">
+          <button class="button button-block button-calm" ng-click="composeTweet()">Tweet</button>
+      </label>
+    </form>
+    
+  </ion-content>
+</ion-modal-view>

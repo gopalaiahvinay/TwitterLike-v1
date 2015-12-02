@@ -39,6 +39,12 @@ app.post('/user', function(req, res){
 		res.json(doc);
 	});
 });
+app.post('/tweet', function(req, res){
+	console.log(req.body);
+	db.tweet.insert(req.body, function(err, doc){
+		res.json(doc);
+	});
+});
 app.get('/tweet', function(req,res){
 	console.log('I received a get request');
 

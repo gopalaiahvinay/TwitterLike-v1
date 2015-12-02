@@ -5,15 +5,13 @@
   <ion-nav-buttons side="right"> <button class="button button-icon button-clear ion-person menuColor" ng-click="login()"> </button> </ion-nav-buttons>
 </ion-nav-bar>
   <ion-content>
-    <div class="row responsive-sm">
-
+    <div class="row responsive-sm" ng-if="loggedIn">
 			<div class="card">
 			  <div class="item item-divider tweetHeader">
-			  	    <p class="item-avatar">
-			  	      <img src="img/vinay.jpeg">
+			  	    <p class="item-avatar displayPic">
+			  	      <img class="image" ng-src="{{avatar}}">
 			  	      <span class="userName">Vinay Gopalaiah</span>
 			  	    </p>
-			    
 			  </div>
 			  <div class="item item-text-wrap">
 			    This is my first tweet
@@ -27,12 +25,35 @@
 				<button class="button-clear ion-crop heart"></button>
 				<span class="datestamp"> 01st December, 2015</span>
 			  </div>
-			  
-
 			</div>
-			
-
     </div>
-    
+    <div class="row responsive-sm" ng-if="!loggedIn">
+		<form ng-submit="doLogin()">
+		      <div class="list">
+		        <label class="item item-input">
+		          <span class="input-label">Username</span>
+		          <input class="customText" type="text" ng-model="loginData.username">
+		        </label>
+		        <label class="item item-input">
+		          <span class="input-label">Password</span>
+		          <input class="customText" type="password" ng-model="loginData.password">
+		        </label>
+		        <label class="item">
+		          <button class="button button-block button-positive" type="submit">Log in</button>
+
+		        </label>
+		      </div>
+		    </form>
+		    <label class="item">
+		        <button class="button button-block button-energized" ng-click="register()">Register</button>
+		    </label>
+    </div>
   </ion-content>
+  <ion-footer-bar align-title="left" class="footerBar">
+    <div class="button-bar">
+      <button class="button button-icon button-clear ion-compose menuColor" ng-click="composeTweetShow()"></button>
+      <button class="button button-icon button-clear ion-image menuColor"></button>
+      <button class="button button-icon button-clear ion-videocamera menuColor"></button>
+    </div>
+  </ion-footer-bar>
 </ion-view>
