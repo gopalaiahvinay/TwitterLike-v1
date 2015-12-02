@@ -19,6 +19,8 @@ angular.module('starter.controllers', [])
   $scope.registerData = {};
   $scope.errorLabel = [];
   $scope.mapDetails = {};
+  $scope.tweetFeeds = {};
+  $scope.userData = {};
   $scope.tweetData = {
     tweet: '',
     username: '',
@@ -127,7 +129,28 @@ angular.module('starter.controllers', [])
     $scope.modal.hide();
   };
 
+  getAvatar = function(username){
+    var avatar;
+    $scope.userData.forEach(function(res){
+      if(res.username === username){
+        console.log('The avatar is:', res.avatar);
+        avatar = res.avatar;
+      }
+    });
+    return avatar;
+  };
 
+  var getTweets = function(){
+    $http.get('http://192.168.1.12:3000/tweet/').success(function(response){
+      $scope.tweetFeeds = response;
+      $scope.tweetFeeds.forEach(function(tweet){
+        tweet.userAvatar = getAvatar(tweet.username);
+        console.log('User Avatar is:',tweet.userAvatar);
+      });
+      console.log('Tweets are: ',$scope.tweetFeeds);
+    });
+
+  }
 
   $scope.doRegister = function(){
     var thumbnail;
@@ -177,6 +200,7 @@ angular.module('starter.controllers', [])
 
   // Perform the login action when the user submits the login form
   $scope.doLogin = function() {
+    getLocation();
     console.log('Doing login', $scope.loginData);
     $http.get('http://192.168.1.12:3000/user/').success(function(response){
 
@@ -193,7 +217,7 @@ angular.module('starter.controllers', [])
           }
         }
       });
-      
+      getTweets();
     });
     
     /*$timeout(function() {
@@ -225,14 +249,17 @@ angular.module('starter.controllers', [])
 
   };
 
-  $scope.displayTweets = function(){
+  /*$scope.displayTweets = function(){
 
     $http.get('http://192.168.1.12:3000/tweet/').success(function(response){
 
       $scope.tweets = response;
+      $scope.tweets.forEach(function(res){
+        res.avatar = 
+      });
 
     });
 
-  };
+  };*/
 })
 
